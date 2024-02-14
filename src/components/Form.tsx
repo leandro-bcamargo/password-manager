@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type FormProps = {
   handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
+
+export type FormErrors = {
+  serviceName: string,
+  login: string,
+  password: string[],
+  url: string,
+};
+
+export type SetFormErrors = React.Dispatch<React.SetStateAction<FormErrors>>;
 
 export default function Form({ handleClick }: FormProps) {
   const [formData, setFormData] = useState({
@@ -11,7 +20,22 @@ export default function Form({ handleClick }: FormProps) {
     password: '',
     url: '',
   });
+
   const [isFormValid, setIsFormValid] = useState(false);
+
+  const INVALID_PASSWORD_CLASS = 'invalid-password-check';
+  const VALID_PASSWORD_CLASS = 'valid-password-check';
+
+  const [passwordClasses, setPasswordClasses] = useState({
+    minChars: INVALID_PASSWORD_CLASS,
+    maxChars: VALID_PASSWORD_CLASS,
+    lettersNums: INVALID_PASSWORD_CLASS,
+    specialChars: INVALID_PASSWORD_CLASS,
+  });
+
+  useEffect(() => {
+    validateForm();
+  }, [formData.password]);
 
   function validateServiceName(serviceName: string) {
     if (serviceName) return true;
@@ -22,29 +46,34 @@ export default function Form({ handleClick }: FormProps) {
   }
 
   function validatePassword(password: string) {
-    if (password.length < 8 || password.length > 16) {
-      return false;
-    }
     const lettersNumsRegex = /(?=.*[0-9])(?=.*[a-zA-Z])/;
-    if (!lettersNumsRegex.test(password)) {
-      return false;
-    }
     const specialCharsRegex = /[^0-9a-zA-Z]/;
-    return !(!specialCharsRegex.test(password));
+    setPasswordClasses((prevClasses) => ({
+      ...prevClasses,
+      minChars: password.length < 8 ? INVALID_PASSWORD_CLASS : VALID_PASSWORD_CLASS,
+      maxChars: password.length > 16 ? INVALID_PASSWORD_CLASS : VALID_PASSWORD_CLASS,
+      lettersNums: lettersNumsRegex
+        .test(password) ? VALID_PASSWORD_CLASS : INVALID_PASSWORD_CLASS,
+      specialChars: specialCharsRegex
+        .test(password) ? VALID_PASSWORD_CLASS : INVALID_PASSWORD_CLASS,
+    }));
+    return Object.values(passwordClasses)
+      .every((className) => className === VALID_PASSWORD_CLASS);
   }
 
   function validateForm() {
-    if (validateServiceName(formData.serviceName)
-      && validateLogin(formData.login)
-      && validatePassword(formData.password)) {
+    const isServiceNameValid = validateServiceName(formData.serviceName);
+    const isLoginValid = validateLogin(formData.login);
+    const isPasswordValid = validatePassword(formData.password);
+    if (isServiceNameValid && isLoginValid && isPasswordValid) {
       setIsFormValid(true);
     }
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.currentTarget;
-    setFormData({ ...formData, [name]: value });
     validateForm();
+    setFormData({ ...formData, [name]: value });
   }
 
   return (
@@ -72,6 +101,10 @@ export default function Form({ handleClick }: FormProps) {
         name="password"
         type="password"
       />
+      <p className={ passwordClasses.minChars }>Possuir 8 ou mais caracteres</p>
+      <p className={ passwordClasses.maxChars }>Possuir até 16 caracteres</p>
+      <p className={ passwordClasses.lettersNums }>Possuir letras e números</p>
+      <p className={ passwordClasses.specialChars }>Possuir algum caractere especial</p>
       <label htmlFor="url">URL</label>
       <input onChange={ handleChange } value={ formData.url } name="url" type="text" />
       {isFormValid && <button name="register" type="submit">Cadastrar</button>}
