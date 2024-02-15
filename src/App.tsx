@@ -25,7 +25,8 @@ function App() {
   return (
     <>
       <h1>Gerenciador de senhas</h1>
-      {registerBtnVisiblity && <button name="register" onClick={ handleClick }>Cadastrar nova senha</button>}
+      {registerBtnVisiblity
+      && <button name="register" onClick={ handleClick }>Cadastrar nova senha</button>}
       {formVisibility && <Form handleClick={ handleClick } />}
     </>
   );

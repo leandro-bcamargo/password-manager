@@ -4,6 +4,13 @@ type FormProps = {
   handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
+export type FormData = {
+  serviceName: string,
+  login: string,
+  password: string,
+  url: string,
+};
+
 export type FormErrors = {
   serviceName: string,
   login: string,
@@ -14,6 +21,8 @@ export type FormErrors = {
 export type SetFormErrors = React.Dispatch<React.SetStateAction<FormErrors>>;
 
 export default function Form({ handleClick }: FormProps) {
+  const [services, setServices] = useState<FormData[]>([]);
+
   const [formData, setFormData] = useState({
     serviceName: '',
     login: '',
@@ -76,8 +85,19 @@ export default function Form({ handleClick }: FormProps) {
     setFormData({ ...formData, [name]: value });
   }
 
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setServices((prevServices) => [...prevServices, { ...formData }]);
+    setFormData({
+      serviceName: '',
+      login: '',
+      password: '',
+      url: '',
+    });
+  }
+
   return (
-    <form action="submit">
+    <form action="submit" onSubmit={ handleSubmit }>
       <label htmlFor="service-name">Nome do serviço</label>
       <input
         value={ formData.serviceName }
@@ -107,7 +127,27 @@ export default function Form({ handleClick }: FormProps) {
       <p className={ passwordClasses.specialChars }>Possuir algum caractere especial</p>
       <label htmlFor="url">URL</label>
       <input onChange={ handleChange } value={ formData.url } name="url" type="text" />
-      {isFormValid && <button name="register" type="submit">Cadastrar</button>}
+      {isFormValid
+      && (
+        <button
+          name="register"
+          type="submit"
+          onClick={ handleClick }
+        >
+          Cadastrar
+        </button>)}
+
+      {services.length === 0
+        ? <p>Nenhuma senha cadastrada</p>
+        : services.map((service, i) => {
+          return (
+            <div key={ i }>
+              <a href={ service.url }>{service.serviceName}</a>
+              <p>{service.login}</p>
+              <p>{service.password}</p>
+            </div>
+          );
+        })}
       <button name="cancel" onClick={ handleClick }>Cancelar</button>
     </form>
   );
