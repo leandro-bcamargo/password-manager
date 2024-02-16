@@ -96,6 +96,12 @@ export default function Form({ handleClick }: FormProps) {
     });
   }
 
+  function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
+    const { name } = e.currentTarget;
+    setServices((prevServices) => prevServices
+      .filter((service) => service.serviceName !== name));
+  }
+
   return (
     <form action="submit" onSubmit={ handleSubmit }>
       <label htmlFor="service-name">Nome do serviço</label>
@@ -120,13 +126,20 @@ export default function Form({ handleClick }: FormProps) {
         value={ formData.password }
         name="password"
         type="password"
+        id="password"
       />
       <p className={ passwordClasses.minChars }>Possuir 8 ou mais caracteres</p>
       <p className={ passwordClasses.maxChars }>Possuir até 16 caracteres</p>
       <p className={ passwordClasses.lettersNums }>Possuir letras e números</p>
       <p className={ passwordClasses.specialChars }>Possuir algum caractere especial</p>
       <label htmlFor="url">URL</label>
-      <input onChange={ handleChange } value={ formData.url } name="url" type="text" />
+      <input
+        onChange={ handleChange }
+        value={ formData.url }
+        name="url"
+        type="text"
+        id="url"
+      />
       {isFormValid
       && (
         <button
@@ -145,6 +158,13 @@ export default function Form({ handleClick }: FormProps) {
               <a href={ service.url }>{service.serviceName}</a>
               <p>{service.login}</p>
               <p>{service.password}</p>
+              <button
+                data-testid="remove-btn"
+                onClick={ handleRemove }
+                name={ service.serviceName }
+              >
+                Remover
+              </button>
             </div>
           );
         })}
