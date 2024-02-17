@@ -32,6 +32,8 @@ export default function Form({ handleClick }: FormProps) {
 
   const [isFormValid, setIsFormValid] = useState(false);
 
+  const [hidePasswords, setHidePasswords] = useState(false);
+
   const INVALID_PASSWORD_CLASS = 'invalid-password-check';
   const VALID_PASSWORD_CLASS = 'valid-password-check';
 
@@ -102,6 +104,10 @@ export default function Form({ handleClick }: FormProps) {
       .filter((service) => service.serviceName !== name));
   }
 
+  function handleHidePass() {
+    setHidePasswords((prevState) => !prevState);
+  }
+
   return (
     <form action="submit" onSubmit={ handleSubmit }>
       <label htmlFor="service-name">Nome do serviço</label>
@@ -157,7 +163,7 @@ export default function Form({ handleClick }: FormProps) {
             <div key={ i }>
               <a href={ service.url }>{service.serviceName}</a>
               <p>{service.login}</p>
-              <p>{service.password}</p>
+              <p>{hidePasswords ? '******' : service.password}</p>
               <button
                 data-testid="remove-btn"
                 onClick={ handleRemove }
@@ -169,6 +175,13 @@ export default function Form({ handleClick }: FormProps) {
           );
         })}
       <button name="cancel" onClick={ handleClick }>Cancelar</button>
+      <label htmlFor="hide-passwords">Esconder senhas</label>
+      <input
+        type="checkbox"
+        id="hide-passwords"
+        name="hide-passwords"
+        onClick={ handleHidePass }
+      />
     </form>
   );
 }
