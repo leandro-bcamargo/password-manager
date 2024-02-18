@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { FormData } from '../types/FormData';
 
 type FormProps = {
   handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-};
-
-export type FormData = {
-  serviceName: string,
-  login: string,
-  password: string,
-  url: string,
+  setFormVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowSuccessRegisteredMsg: React.Dispatch<React.SetStateAction<boolean>>;
+  setRegisterBtnVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  setServices: React.Dispatch<React.SetStateAction<FormData[]>>;
+  setHidePasswords: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type FormErrors = {
@@ -20,9 +19,11 @@ export type FormErrors = {
 
 export type SetFormErrors = React.Dispatch<React.SetStateAction<FormErrors>>;
 
-export default function Form({ handleClick }: FormProps) {
-  const [services, setServices] = useState<FormData[]>([]);
-
+export default function Form({ handleClick,
+  setFormVisibility, setShowSuccessRegisteredMsg,
+  setRegisterBtnVisibility,
+  setServices,
+  setHidePasswords }: FormProps) {
   const [formData, setFormData] = useState({
     serviceName: '',
     login: '',
@@ -31,8 +32,6 @@ export default function Form({ handleClick }: FormProps) {
   });
 
   const [isFormValid, setIsFormValid] = useState(false);
-
-  const [hidePasswords, setHidePasswords] = useState(false);
 
   const INVALID_PASSWORD_CLASS = 'invalid-password-check';
   const VALID_PASSWORD_CLASS = 'valid-password-check';
@@ -90,18 +89,9 @@ export default function Form({ handleClick }: FormProps) {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setServices((prevServices) => [...prevServices, { ...formData }]);
-    setFormData({
-      serviceName: '',
-      login: '',
-      password: '',
-      url: '',
-    });
-  }
-
-  function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
-    const { name } = e.currentTarget;
-    setServices((prevServices) => prevServices
-      .filter((service) => service.serviceName !== name));
+    setShowSuccessRegisteredMsg(true);
+    setFormVisibility(false);
+    setRegisterBtnVisibility(true);
   }
 
   function handleHidePass() {
@@ -146,34 +136,15 @@ export default function Form({ handleClick }: FormProps) {
         type="text"
         id="url"
       />
-      {isFormValid
-      && (
-        <button
-          name="register"
-          type="submit"
-          onClick={ handleClick }
-        >
-          Cadastrar
-        </button>)}
+      <button
+        name="register"
+        type="submit"
+        onClick={ handleClick }
+        disabled={ !isFormValid }
+      >
+        Cadastrar
+      </button>
 
-      {services.length === 0
-        ? <p>Nenhuma senha cadastrada</p>
-        : services.map((service, i) => {
-          return (
-            <div key={ i }>
-              <a href={ service.url }>{service.serviceName}</a>
-              <p>{service.login}</p>
-              <p>{hidePasswords ? '******' : service.password}</p>
-              <button
-                data-testid="remove-btn"
-                onClick={ handleRemove }
-                name={ service.serviceName }
-              >
-                Remover
-              </button>
-            </div>
-          );
-        })}
       <button name="cancel" onClick={ handleClick }>Cancelar</button>
       <label htmlFor="hide-passwords">Esconder senhas</label>
       <input
