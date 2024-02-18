@@ -33,6 +33,8 @@ export default function Form({ handleClick,
 
   const [isFormValid, setIsFormValid] = useState(false);
 
+  const [inputType, setInputType] = useState('password');
+
   const INVALID_PASSWORD_CLASS = 'invalid-password-check';
   const VALID_PASSWORD_CLASS = 'valid-password-check';
 
@@ -98,6 +100,14 @@ export default function Form({ handleClick,
     setHidePasswords((prevState) => !prevState);
   }
 
+  function handlePasswordFieldVisibility() {
+    if (inputType === 'password') {
+      setInputType('text');
+    } else {
+      setInputType('password');
+    }
+  }
+
   return (
     <form action="submit" onSubmit={ handleSubmit }>
       <label htmlFor="service-name">Nome do serviço</label>
@@ -121,9 +131,16 @@ export default function Form({ handleClick,
         onChange={ handleChange }
         value={ formData.password }
         name="password"
-        type="password"
+        type={ inputType }
         id="password"
       />
+      <button
+        type="button"
+        data-testid="show-hide-form-password"
+        onClick={ handlePasswordFieldVisibility }
+      >
+        Esconder/Mostrar senha
+      </button>
       <p className={ passwordClasses.minChars }>Possuir 8 ou mais caracteres</p>
       <p className={ passwordClasses.maxChars }>Possuir até 16 caracteres</p>
       <p className={ passwordClasses.lettersNums }>Possuir letras e números</p>
