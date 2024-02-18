@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import { FormData } from '../types/FormData';
 
 type FormProps = {
   handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   setFormVisibility: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowSuccessRegisteredMsg: React.Dispatch<React.SetStateAction<boolean>>;
   setRegisterBtnVisibility: React.Dispatch<React.SetStateAction<boolean>>;
   setServices: React.Dispatch<React.SetStateAction<FormData[]>>;
   setHidePasswords: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,7 +20,7 @@ export type FormErrors = {
 export type SetFormErrors = React.Dispatch<React.SetStateAction<FormErrors>>;
 
 export default function Form({ handleClick,
-  setFormVisibility, setShowSuccessRegisteredMsg,
+  setFormVisibility,
   setRegisterBtnVisibility,
   setServices,
   setHidePasswords }: FormProps) {
@@ -88,16 +88,19 @@ export default function Form({ handleClick,
     setFormData({ ...formData, [name]: value });
   }
 
+  function showSuccessRegisteredMsg() {
+    Swal.fire({
+      title: 'Serviço cadastrado com sucesso',
+      timer: 1500,
+    });
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setServices((prevServices) => [...prevServices, { ...formData }]);
-    setShowSuccessRegisteredMsg(true);
     setFormVisibility(false);
     setRegisterBtnVisibility(true);
-  }
-
-  function handleHidePass() {
-    setHidePasswords((prevState) => !prevState);
+    showSuccessRegisteredMsg();
   }
 
   function handlePasswordFieldVisibility() {
@@ -161,15 +164,7 @@ export default function Form({ handleClick,
       >
         Cadastrar
       </button>
-
       <button name="cancel" onClick={ handleClick }>Cancelar</button>
-      <label htmlFor="hide-passwords">Esconder senhas</label>
-      <input
-        type="checkbox"
-        id="hide-passwords"
-        name="hide-passwords"
-        onClick={ handleHidePass }
-      />
     </form>
   );
 }

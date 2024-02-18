@@ -3,11 +3,11 @@ import './App.css';
 import Form from './components/Form';
 import Services from './components/Services';
 import { FormData } from './types/FormData';
+import HidePasswordsCheckbox from './components/HidePasswordsCheckbox';
 
 function App() {
   const [registerBtnVisiblity, setRegisterBtnVisibility] = useState(true);
   const [formVisibility, setFormVisibility] = useState(false);
-  const [showSuccessRegisteredMsg, setShowSuccessRegisteredMsg] = useState(false);
   const [services, setServices] = useState<FormData[]>([]);
   const [hidePasswords, setHidePasswords] = useState(false);
 
@@ -25,13 +25,16 @@ function App() {
     const { name } = e.currentTarget;
     if (name === 'register') handleRegister();
     if (name === 'cancel') handleCancel();
-    setShowSuccessRegisteredMsg(false);
   }
 
   function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
     const { name } = e.currentTarget;
     setServices((prevServices) => prevServices
       .filter((service) => service.serviceName !== name));
+  }
+
+  function handleHidePass() {
+    setHidePasswords((prevState) => !prevState);
   }
 
   return (
@@ -43,12 +46,11 @@ function App() {
       && <Form
         handleClick={ handleClick }
         setFormVisibility={ setFormVisibility }
-        setShowSuccessRegisteredMsg={ setShowSuccessRegisteredMsg }
         setRegisterBtnVisibility={ setRegisterBtnVisibility }
         setServices={ setServices }
         setHidePasswords={ setHidePasswords }
       />}
-      {showSuccessRegisteredMsg && <p>Senha cadastrada com sucesso!</p>}
+      {services.length > 0 && <HidePasswordsCheckbox handleHidePass={ handleHidePass } />}
       <Services
         services={ services }
         handleRemove={ handleRemove }
