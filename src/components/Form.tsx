@@ -3,11 +3,11 @@ import Swal from 'sweetalert2';
 import { FormData } from '../types/FormData';
 
 type FormProps = {
-  handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  handleCancel: () => void;
+  handleRegister: () => void;
   setFormVisibility: React.Dispatch<React.SetStateAction<boolean>>;
   setRegisterBtnVisibility: React.Dispatch<React.SetStateAction<boolean>>;
   setServices: React.Dispatch<React.SetStateAction<FormData[]>>;
-  setHidePasswords: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type FormErrors = {
@@ -19,11 +19,10 @@ export type FormErrors = {
 
 export type SetFormErrors = React.Dispatch<React.SetStateAction<FormErrors>>;
 
-export default function Form({ handleClick,
+export default function Form({ handleCancel, handleRegister,
   setFormVisibility,
   setRegisterBtnVisibility,
-  setServices,
-  setHidePasswords }: FormProps) {
+  setServices }: FormProps) {
   const [formData, setFormData] = useState({
     serviceName: '',
     login: '',
@@ -159,12 +158,12 @@ export default function Form({ handleClick,
       <button
         name="register"
         type="submit"
-        onClick={ handleClick }
+        onClick={ handleRegister }
         disabled={ !isFormValid }
       >
         Cadastrar
       </button>
-      <button name="cancel" onClick={ handleClick }>Cancelar</button>
+      <button name="cancel" onClick={ handleCancel }>Cancelar</button>
     </form>
   );
 }

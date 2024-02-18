@@ -21,12 +21,6 @@ function App() {
     setFormVisibility(false);
   }
 
-  function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-    const { name } = e.currentTarget;
-    if (name === 'register') handleRegister();
-    if (name === 'cancel') handleCancel();
-  }
-
   function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
     const { name } = e.currentTarget;
     setServices((prevServices) => prevServices
@@ -41,14 +35,14 @@ function App() {
     <>
       <h1>Gerenciador de senhas</h1>
       {registerBtnVisiblity
-      && <button name="register" onClick={ handleClick }>Cadastrar nova senha</button>}
+      && <button name="register" onClick={ handleRegister }>Cadastrar nova senha</button>}
       {formVisibility
       && <Form
-        handleClick={ handleClick }
+        handleCancel={ handleCancel }
+        handleRegister={ handleRegister }
         setFormVisibility={ setFormVisibility }
         setRegisterBtnVisibility={ setRegisterBtnVisibility }
         setServices={ setServices }
-        setHidePasswords={ setHidePasswords }
       />}
       {services.length > 0 && <HidePasswordsCheckbox handleHidePass={ handleHidePass } />}
       <Services
