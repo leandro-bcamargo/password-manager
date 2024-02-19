@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import './App.css';
 import Form from './components/Form';
 import Services from './components/Services';
@@ -11,25 +11,25 @@ function App() {
   const [services, setServices] = useState<FormData[]>([]);
   const [hidePasswords, setHidePasswords] = useState(false);
 
-  function handleRegister() {
+  const handleRegister = useCallback(() => {
     setRegisterBtnVisibility(false);
     setFormVisibility(true);
-  }
+  }, []);
 
-  function handleCancel() {
+  const handleCancel = useCallback(() => {
     setRegisterBtnVisibility(true);
     setFormVisibility(false);
-  }
+  }, []);
 
-  function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
+  const handleRemove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     const { name } = e.currentTarget;
     setServices((prevServices) => prevServices
       .filter((service) => service.serviceName !== name));
-  }
+  }, []);
 
-  function handleHidePass() {
+  const handleHidePass = useCallback(() => {
     setHidePasswords((prevState) => !prevState);
-  }
+  }, []);
 
   return (
     <>

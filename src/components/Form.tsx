@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { FormData } from '../types/FormData';
 
@@ -44,10 +44,6 @@ export default function Form({ handleCancel, handleRegister,
     specialChars: INVALID_PASSWORD_CLASS,
   });
 
-  useEffect(() => {
-    validateForm();
-  }, [formData.password]);
-
   function validateServiceName(serviceName: string) {
     if (serviceName) return true;
   }
@@ -56,7 +52,7 @@ export default function Form({ handleCancel, handleRegister,
     if (login) return true;
   }
 
-  function validatePassword(password: string) {
+  const validatePassword = useCallback((password: string) => {
     const lettersNumsRegex = /(?=.*[0-9])(?=.*[a-zA-Z])/;
     const specialCharsRegex = /[^0-9a-zA-Z]/;
     setPasswordClasses((prevClasses) => ({
@@ -70,16 +66,20 @@ export default function Form({ handleCancel, handleRegister,
     }));
     return Object.values(passwordClasses)
       .every((className) => className === VALID_PASSWORD_CLASS);
-  }
+  }, [passwordClasses]);
 
-  function validateForm() {
+  const validateForm = useCallback(() => {
     const isServiceNameValid = validateServiceName(formData.serviceName);
     const isLoginValid = validateLogin(formData.login);
     const isPasswordValid = validatePassword(formData.password);
     if (isServiceNameValid && isLoginValid && isPasswordValid) {
       setIsFormValid(true);
     }
-  }
+  }, [formData.login, formData.password, formData.serviceName, validatePassword]);
+
+  useEffect(() => {
+    validateForm();
+  }, [formData.password, validateForm]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.currentTarget;
