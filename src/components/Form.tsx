@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { FormData } from '../types/FormData';
+import './Form.css';
 
 type FormProps = {
   handleCancel: () => void;
@@ -111,31 +112,37 @@ export default function Form({ handleCancel, handleRegister,
   }
 
   return (
-    <form action="submit" onSubmit={ handleSubmit }>
-      <label htmlFor="service-name">Nome do serviço</label>
-      <input
-        value={ formData.serviceName }
-        name="serviceName"
-        type="text"
-        id="service-name"
-        onChange={ handleChange }
-      />
-      <label htmlFor="login">Login</label>
-      <input
-        onChange={ handleChange }
-        value={ formData.login }
-        name="login"
-        type="text"
-        id="login"
-      />
-      <label htmlFor="password">Senha</label>
-      <input
-        onChange={ handleChange }
-        value={ formData.password }
-        name="password"
-        type={ inputType }
-        id="password"
-      />
+    <form className="form" action="submit" onSubmit={ handleSubmit }>
+      <label htmlFor="service-name" className="service-name">
+        Nome do serviço
+        <input
+          value={ formData.serviceName }
+          name="serviceName"
+          type="text"
+          id="service-name"
+          onChange={ handleChange }
+        />
+      </label>
+      <label htmlFor="login" className="login">
+        Login
+        <input
+          onChange={ handleChange }
+          value={ formData.login }
+          name="login"
+          type="text"
+          id="login"
+        />
+      </label>
+      <label htmlFor="password" className="password">
+        Senha
+        <input
+          onChange={ handleChange }
+          value={ formData.password }
+          name="password"
+          type={ inputType }
+          id="password"
+        />
+      </label>
       <button
         type="button"
         data-testid="show-hide-form-password"
@@ -143,27 +150,36 @@ export default function Form({ handleCancel, handleRegister,
       >
         Esconder/Mostrar senha
       </button>
-      <p className={ passwordClasses.minChars }>Possuir 8 ou mais caracteres</p>
-      <p className={ passwordClasses.maxChars }>Possuir até 16 caracteres</p>
-      <p className={ passwordClasses.lettersNums }>Possuir letras e números</p>
-      <p className={ passwordClasses.specialChars }>Possuir algum caractere especial</p>
-      <label htmlFor="url">URL</label>
-      <input
-        onChange={ handleChange }
-        value={ formData.url }
-        name="url"
-        type="text"
-        id="url"
-      />
-      <button
-        name="register"
-        type="submit"
-        onClick={ handleRegister }
-        disabled={ !isFormValid }
+      <div className="validation-messages">
+        <p className={ passwordClasses.minChars }>Possuir 8 ou mais caracteres</p>
+        <p className={ passwordClasses.maxChars }>Possuir até 16 caracteres</p>
+        <p className={ passwordClasses.lettersNums }>Possuir letras e números</p>
+        <p className={ passwordClasses.specialChars }>Possuir algum caractere especial</p>
+      </div>
+      <label
+        htmlFor="url"
+        className="url"
       >
-        Cadastrar
-      </button>
-      <button name="cancel" onClick={ handleCancel }>Cancelar</button>
+        URL
+        <input
+          onChange={ handleChange }
+          value={ formData.url }
+          name="url"
+          type="text"
+          id="url"
+        />
+      </label>
+      <div className="register-cancel">
+        <button
+          name="register"
+          type="submit"
+          onClick={ handleRegister }
+          disabled={ !isFormValid }
+        >
+          Cadastrar
+        </button>
+        <button name="cancel" onClick={ handleCancel }>Cancelar</button>
+      </div>
     </form>
   );
 }

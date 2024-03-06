@@ -1,0 +1,36 @@
+.form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  justify-content: space-between;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.service-name, .login, .password, .url {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.validation-messages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.validation-messages p {
+  margin: 3px 0;
+}
+
+button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.register-cancel {
+  display: flex;
+  gap: 5px;
+}

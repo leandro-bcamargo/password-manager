@@ -32,25 +32,40 @@ function App() {
   }, []);
 
   return (
-    <>
-      <h1>Gerenciador de senhas</h1>
-      {registerBtnVisiblity
-      && <button name="register" onClick={ handleRegister }>Cadastrar nova senha</button>}
+    <div className="app">
+      <div className="title">
+        <h1>Gerenciador de senhas</h1>
+      </div>
+      <div className="register-btn">
+        {registerBtnVisiblity
+        && (
+          <button
+            name="register"
+            onClick={ handleRegister }
+          >
+            Cadastrar nova senha
+          </button>)}
+      </div>
       {formVisibility
-      && <Form
-        handleCancel={ handleCancel }
-        handleRegister={ handleRegister }
-        setFormVisibility={ setFormVisibility }
-        setRegisterBtnVisibility={ setRegisterBtnVisibility }
-        setServices={ setServices }
-      />}
-      {services.length > 0 && <HidePasswordsCheckbox handleHidePass={ handleHidePass } />}
-      <Services
-        services={ services }
-        handleRemove={ handleRemove }
-        hidePasswords={ hidePasswords }
-      />
-    </>
+        && <Form
+          handleCancel={ handleCancel }
+          handleRegister={ handleRegister }
+          setFormVisibility={ setFormVisibility }
+          setRegisterBtnVisibility={ setRegisterBtnVisibility }
+          setServices={ setServices }
+        />}
+      <div className="hide-pass-checkbox">
+        {services.length > 0
+        && <HidePasswordsCheckbox handleHidePass={ handleHidePass } />}
+      </div>
+      <div className="services">
+        <Services
+          services={ services }
+          handleRemove={ handleRemove }
+          hidePasswords={ hidePasswords }
+        />
+      </div>
+    </div>
   );
 }
 
